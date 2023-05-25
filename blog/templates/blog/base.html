@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+
+<head>
+    <title>{% block head_title %}천개의 레시피 - 레시피{% endblock %}</title>
+    <link href="{% static 'blog/bootstrap/bootstrap.min.css' %}" rel="stylesheet" type="text/css">
+    <!-- Popper.js and Bootstrap.js -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"
+            integrity="sha384-zYPOMqeu1DAVkHiLqWBUTcbYfZ8osu1Nd6Z89ify25QV9guujx43ITvfi12/QExE"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.min.js"
+            integrity="sha384-Y4oOpwW3duJdCWv5ly8SCFYWqFDsfob/3GkgExXKV4idmbt98QcxXYs9UoXAB7BZ"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <!-- Font Awesome -->
+    <script src="https://kit.fontawesome.com/320e17fa54.js" crossorigin="anonymous"></script>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Django에서는 ./로 경로 사용 불가 -->
+    <script>
+<!--즐겨찾기-->
+$(document).ready(function () {
+  function toggle_like(post_pk) {
+    $.ajax({
+      url: "{% url 'blog:likes' 1234567890 %}".replace("1234567890", post_pk),
+      type: "POST",
+      data: {
+        csrfmiddlewaretoken: "{{ csrf_token }}",
+      },
+      dataType: "json",
+      success: function (data) {
+        if (data.liked) {
+          $(`#like-btn-${post_pk}`).html('<i class="fas fa-star" style="color: #fae500;"></i>');
+        } else {
+          $(`#like-btn-${post_pk}`).html('<i class="far fa-star" style="color: black;"></i>');
+        }
+      },
+    });  }
+
+
+  $("body").on("click", '.like-btn', function() {
+  let postCode = this.id.slice(8);
+    postCode = postCode.replace(/\D/g, "");
+  toggle_like(postCode);
+});
+});
+
+
+
+<!--댓글창 추천-->
+  $(document).ready(function() {
+    $(".recommend").click(function() {
+      var dataUri = $(this).data("uri");
+      var votesBadge = $(this).find(".bg-success");
+
+      $.ajax({
+        url: dataUri,
+        method: "POST",
+        data: {
+          csrfmiddlewaretoken: "{{ csrf_token }}"
+        },
+        success: function(response) {
+          if (response.status == "success") {
+            var newVotes = response.votes;
+            votesBadge.text(newVotes);
+          } else {
+            alert(response.message);
+          }
+        }
+      });
+    });
+  });
+
+
+<!--게시글 추천-->
+ $(document).ready(function() {
+    $(".recommend").click(function() {
+      var dataUri = $(this).data("uri");
+      var votesBadge = $(this).find(".bg-success");
+
+      $.ajax({
+        url: dataUri,
+        method: "POST",
+        data: {
+            csrfmiddlewaretoken: "{{ csrf_token }}"
+        },
+        success: function(response) {
+          if (response.status == "success") {
+            var newVotes = response.votes;
+            votesBadge.text(newVotes);
+          } else if (response.status == "unvoted") {
+            var newVotes = response.votes;
+            votesBadge.text(newVotes);
+          } else {
+            if (response.message == 'undefined') {
+              console.log(response.message);
+            }
+          }
+        }
+      });
+    });
+  });
+
+<!--디테일이미지 클릭시 팝업-->
+function viewLargePic(imgSrc) {
+  let largeImgModal = `
+    <div class="large-img-modal">
+      <div class="large-img-modal-content">
+        <span class="close">&times;</span>
+        <img src="${imgSrc}" alt="Large image">
+      </div>
+    </div>
+  `;
+
+  $('body').append(largeImgModal);
+
+  $('.large-img-modal').css({
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    background: 'rgba(0, 0, 0, 0.8)',
+    zIndex: 1000,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  });
+
+  $('.large-img-modal-content').css({
+    width: 'auto',
+    maxHeight: '80%',
+    overflow: 'auto',
+    background: 'white',
+    position: 'relative',
+  });
+
+  $('.large-img-modal img').css({
+    maxHeight: '100%',
+    width: 'auto',
+    maxWidth: '100%',
+    maxHeight: '80%',
+  });
+
+  $('.large-img-modal .close').css({
+    position: 'absolute',
+    top: '10px',
+    right: '10px',
+    fontSize: '30px',
+    fontWeight: 'bold',
+    cursor: 'pointer',
+    color: 'white',
+  });
+
+  $('.large-img-modal .close').click(() => {
+    $('.large-img-modal').remove();
+  });
+}
+
+$(document).ready(function () {
+  $('.post_content img').click(function () {
+    viewLargePic($(this).attr('src'));
+  });
+});
+
+<!--상세검색-->
+function addTextToSearch() {
+    const firstInput = document.getElementById('firstInput');
+    const searchInput = document.getElementById('search-input-modal');
+    const keyword = firstInput.value.trim();
+
+    if (keyword) {
+      createKeywordBox(keyword);
+      if (searchInput.value) {
+          searchInput.value += ', ' + keyword;
+      } else {
+          searchInput.value = keyword;
+      }
+    }
+
+    // 초기화: 추가한 뒤, 첫 번째 검색창의 값을 초기화합니다.
+    firstInput.value = '';
+}
+
+function searchPost() {
+    let searchValue = document.getElementById('search-input').value.trim();
+    if (searchValue.length > 0) {
+        location.href = "/blog/search1/" + searchValue + "/";
+    } else {
+        alert('검색어(' + searchValue + ')가 너무 짧습니다.');
+    }
+}
+
+function clearSearchInput() {
+    document.getElementById("search-input-modal").value = "";
+}
+
+function searchPostModal() {
+    let searchValue = document.getElementById('search-input-modal').value.trim();
+    if (searchValue.length > 0) {
+        location.href = "/blog/search/" + searchValue + "/";
+    } else {
+        alert('검색어(' + searchValue + ')가 너무 짧습니다.');
+    }
+}
+
+document.getElementById('search-input-modal').addEventListener('keyup', function (event) {
+    if (event.key == 'Enter') {
+        searchPost();
+    }
+});
+
+document.getElementById('firstInput').addEventListener('keyup', function (event) {
+    if (event.key == 'Enter') {
+        addTextToSearch();
+    }
+});
+
+// 추가: 검색어 목록 박스 생성 기능
+function createKeywordBox(keyword) {
+  const keywordContainer = document.getElementById('search-keywords-container');
+  const keywordBox = document.createElement('div');
+  keywordBox.className = 'keyword-box';
+  keywordBox.style = 'display: flex; align-items: center; background: #f0f0f0; padding: 10px 4px; height: 30px; border-radius: 4px; small font; margin: 2px;'; // 패딩 값을 조절합니다.
+
+  const keywordText = document.createElement('span');
+  keywordText.textContent = keyword;
+
+  const closeButton = document.createElement('button');
+  closeButton.style = 'background: none; border: none; padding-left: 4px; font-size: 14px;'; // 패딩 값을 조절합니다.
+  closeButton.innerHTML = '<i class="fas fa-times"></i>';
+  closeButton.onclick = function() {
+      removeKeyword(keyword, keywordBox);
+  };
+
+  keywordBox.appendChild(keywordText);
+  keywordBox.appendChild(closeButton);
+  keywordContainer.appendChild(keywordBox);
+}
+
+// 추가: 키워드 삭제 기능
+
+
+
+
+function removeKeywordFromInput(keyword) {
+  const searchInput = document.getElementById('search-input-modal');
+  const keywords = searchInput.value.split(',').map(k => k.trim());
+
+  const index = keywords.indexOf(keyword);
+  if (index !== -1) {
+    keywords.splice(index, 1);
+  }
+
+  searchInput.value = keywords.join(', ');
+}
+
+function removeKeyword(keyword, keywordBox, isFromThirdInput = false) { // isFromThirdInput을 인자로 추가
+  const keywordContainer = document.getElementById('search-keywords-container');
+  keywordContainer.removeChild(keywordBox);
+  const searchInput = document.getElementById('search-input-modal');
+  const keywordValues = searchInput.value.split(',').map(k => k.trim());
+
+  if (isFromThirdInput) { // 세 번째 검색창에서 삭제되었을 때만 실행
+    removeKeywordFromInput(keyword);
+  }
+
+  const index = keywordValues.indexOf(keyword);
+        if (index > -1) {
+            keywordValues.splice(index, 1);
+        }
+
+        searchInput.value = keywordValues.join(', ');
+        keywordBox.remove();
+}
+
+function clearKeywords() { // 새로운 함수를 추가
+  const keywordContainer = document.getElementById('search-keywords-container');
+  while (keywordContainer.firstChild) {
+    keywordContainer.removeChild(keywordContainer.firstChild);
+  }
+  document.getElementById('search-input-modal').value = '';
+}
+</script>
+<style>
+    .imsi {
+        overflow: auto;
+    }
+
+    .imsi img {
+        float: left;
+        margin-right: 15px;
+    }
+    body {
+        background-image: url('/static/single_pages/images/재료2.jpg');
+        background-attachment: fixed;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+</style>
+
+</head>
+
+<body style="background-color: lightgray">
+
+{% include 'blog/navbar.html' %}
+
+<div class="container my-3">
+    <div class="row">
+        <div class="col-md-8 col-lg-9" id="main-area">
+            {% block main_area %}
+            {% endblock %}
+        </div>
+        {% include 'blog/side.html' %}
+
+        {% block search_area %}
+        {% endblock %}
+
+    </div>
+</div>
+</body>
+
+{% include 'blog/footer.html' %}
+
+</html>

@@ -1,0 +1,115 @@
+{% extends 'blog/base.html' %}
+
+{% block main_area %}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col">
+            <h1>
+                <a class="text-decoration-none fw-bolder" style="color: black;" href="/blog/">레시피</a>
+                {% if search_ingredient_info %}
+                    <small class="text-muted" style="font-size: 0.5em;">{{ search_ingredient_info }}</small>
+                {% elif search_menu_info %}
+                    <small class="text-muted" style="font-size: 0.5em;">{{ search_menu_info }}</small>
+                {% elif category %}
+                    <button class="btn btn-success">{{ category }}</button>
+                {% endif %}
+            </h1>
+        </div>
+        <div class="col d-flex justify-content-end align-items-center">
+            <form method="GET" action="{% url 'blog:Sortings' %}">
+                <div class="d-inline-flex">
+                    <select name="sort" id="sort" style="margin-right:5px; border-radius:5px;">
+                        <option value="recently" id="recently">최신순</option>
+                        <option value="likes" id="likes">추천순</option>
+                        <option value="comments" id="comments">댓글순</option>
+                        <option value="Bookmark" id="Bookmark">즐겨찾기</option>
+                    </select>
+                    <button class="btn btn-primary" type="submit" value="">정렬</button>
+                </div>
+            </form>
+
+            {% if user.is_authenticated %}
+            {% if user.is_superuser or user.is_staff %}
+            <a class="btn btn-info btn-sm ms-2" href="/blog/create_post/" role="button">
+                <i class="fas fa-pen"></i>&nbsp;&nbsp;New Post
+            </a>
+            {% endif %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+<!-- Blog Post -->
+
+{% if post_list.exists %}
+{% for i in post_list %}
+<div class="card mb-4 col-4 p-2 float-start" id="post-{{i.pk}}">
+<!--    <div id="like-btn-{{ i.pk }}" class="like-btn" style="cursor:pointer; border: 1px solid black">-->
+    <div id="like-btn-{{ i.pk }}" class="like-btn" style="cursor:pointer; width: 32px; position: absolute; top: 0px; right: 0px; z-index: 1; background-color: white; padding: 5px; border-radius: 15%;">
+        {% if user in i.like_users.all %}
+        <i class="fas fa-star" style="color: #fae500;"></i>
+        {% else %}
+        <i class="far fa-star" style="color: black;"></i>
+        {% endif %}
+    </div>
+    {% if i.large_img %}
+    <a href="{{ i.get_absolute_url }}">
+        <img class="card-img-top" src="{{ i.small_img }}" alt="{{ i.rcp_name }}"  style="width:100%;height:300px;">
+    </a>
+    {% else %}
+    <a href="{{ i.get_absolute_url }}">
+        <img class="card-img-top" src="https://picsum.photos/seed/{{i.pk}}/500/240" alt="..." style="width:100%;height:300px;">
+    </a>
+    {% endif %}
+    <div class="card-body">
+        <div class="small text-muted">{{ i.created_at }}</div>
+        {% if i.category %}
+        <a href="{{ i.category.get_absolute_url }}">
+            <span class="badge text-bg-success float-end">{{ i.category }}</span>
+        </a>
+        {% else %}
+        <a href="/blog/category/no_category/">
+            <span class="badge text-bg-danger float-end">기타</span>
+        </a>
+        {% endif %}
+        <h5 class="card-title fw-bolder">
+            <a href="{{ i.get_absolute_url }}" class="text-decoration-none">
+                {{ i.rcp_name | truncatechars_html:10 | safe }}
+            </a>
+        </h5>
+        {% if i.rcp_part %}
+        <h5 class="text-muted">{{ i.rcp_part }}</h5>
+        {% endif %}
+        <a class='text-muted text-decoration-none' href="{{ i.get_absolute_url }}">
+            {% if i.get_content_markdown|length < 38 %}
+            <p class="card-text">{{ i.get_content_markdown | truncatechars_html:22 | safe }}</p>
+            <br/>
+            {% else %}
+            <p class="card-text ellipsis">{{ i.get_content_markdown | truncatechars_html:40 | safe }}</p>
+            {% endif %}
+        </a>
+        <div class="row">
+            <p>추천수: {{ i.voter.count }} 댓글수: {{ i.comments.count }}</p>
+        </div>
+    </div>
+    <div class="card-footer">
+        <a class="float-end text-muted text-decoration-none">{{ i.author | upper }}</a>
+    </div>
+</div>
+{% endfor %}
+{% else %}
+<h1>아직 게시물이 없습니다.</h1>
+{% endif %}
+<div class="clearfix"></div>
+
+
+
+{% if search_ingredient_info %}
+{% include 'blog/search_ingredient_Pagination.html' %}
+{% elif search_menu_info %}
+{% include 'blog/search_menu_Pagination.html' %}
+{% else %}
+{% include 'blog/pagination.html' %}
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,283 @@
+{% extends 'blog/base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block head_title %}
+천개의 레시피 - {{ post.rcp_name }}
+{% endblock %}
+
+{% block main_area %}
+<!-- Post content-->
+<article>
+    <div id="post-area">
+        <!-- Post categories-->
+        {% if post.category %}
+        <a href="{{ post.category.get_absolute_url }}">
+            <span class="badge text-bg-success float-end">{{ post.category }}</span>
+        </a>
+        {% else %}
+        <a href="/blog/category/no_category/">
+            <span class="badge text-bg-danger float-end">기타</span>
+        </a>
+        {% endif %}
+        <!-- Title -->
+        <!--즐겨찾기 별-->
+        <h1 class="mt-4">{{ post.rcp_name }}
+            <span id="like-btn-{{ post.pk }}" class="like-btn" style="cursor:pointer;">
+            {% if user in post.like_users.all %}
+            <i class="fas fa-star" style="color: #fae500;"></i>
+            {% else %}
+            <i class="far fa-star" style="color: black;"></i>
+            {% endif %}
+            </span>
+        </h1><br/>
+        <!-- 좋아요 -->
+        <div>
+            <a href="javascript:void(0)" data-uri="{% url 'blog:vote_recipe' post.id %}"
+               class="recommend btn btn-sm btn-outline-secondary"> 추천
+                <span class="badge rounded-pill bg-success">{{ post.voter.count }}</span>
+            </a>
+        </div>
+        <!-- Post header-->
+        <header class="mb-4">
+            {% if user.is_authenticated and user == post.author %}
+            <a class="btn btn-info btn-sm float-end" href="/blog/update_post/{{ post.pk }}/" role="button">
+                <i class="fas fa-pen"></i> Edit Post
+            </a>
+            {% endif %}
+            <!-- Author -->
+            <div class="text-muted fst-italic mb-2">
+                {{ post.created_at }}
+                by
+                <a href="#">{{ post.author | upper }}</a>
+            </div>
+
+
+            <!-- Post meta content-->
+
+            <hr/>
+            {% if post.file_upload %}
+            {% if post.get_file_ext == 'txt' %}
+            <button type="button" class="btn btn-warning float-end">Download <i class="fas fa-vote-yea"></i> :
+                {{ post.get_file_name }}
+            </button>
+            {% elif post.get_file_ext == 'pdf' %}
+            <button type="button" class="btn btn-warning float-end">Download <i
+                    class="fas fa-arrow-alt-circle-down"></i> : {{ post.get_file_name }}
+            </button>
+            {% elif post.get_file_ext == 'hwp' %}
+            <button type="button" class="btn btn-warning float-end">Download <i
+                    class="far fa-arrow-alt-circle-down"></i> : {{ post.get_file_name }}
+            </button>
+            {% elif post.get_file_ext == 'xlsx' %}
+            <button type="button" class="btn btn-warning float-end">Download <i
+                    class="fas fa-file-download"></i> : {{ post.get_file_name }}
+            </button>
+            {% elif post.get_file_ext == 'pptx' %}
+            <button type="button" class="btn btn-warning float-end">Download <i
+                    class="fas fa-window-maximize fa-xs"></i> : {{ post.get_file_name }}
+            </button>
+            {% endif %}
+            {% endif %}
+        </header>
+        <!-- Preview image figure-->
+        <div style="position: relative; width: 966px; height: 400px;">
+            {% if post.large_img %}
+            <img class="img-fluid rounded" src="{{ post.large_img }}" style="height: 400px; width: 500px; position: absolute; top: 0; bottom: 0; left: 233px; margin: auto;" alt="{{ post.rcp_name }} head_image" onclick="viewLargePic('{{ post.large_img }}')">
+            {% else %}
+            <img class="img-fluid rounded" src="https://picsum.photos/seed/{{ post.pk }}/800/200" style="height: 400px; width: 500px; position: absolute; top: 0; bottom: 0; left: 233px; margin: auto;" alt="random_image">
+            {% endif %}
+            <div style="position: absolute;
+                bottom: -75px; left: 0; right: 0;
+                display: flex; justify-content: center; align-items: center; flex-direction: column;">
+                {% if post.get_avatar_url %}
+                <img class="d-flex rounded-circle mr-3" src="{{ post.get_avatar_url }}" alt="{{ post.author }}" width="80px" style="margin-bottom: 10px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 1px 10px rgba(0, 0, 0, 0.04);">
+                {% endif %}
+                <span class='d-flex justify-content-center' style='font-size: 18px;'>{{ post.author }}</span>
+            </div>
+        </div>
+
+        <br><br><br>
+        <hr>
+        <!-- Post content-->
+        <div class="view_step">
+            <div class="best_tit">
+                <h1>조리순서</h1>
+                <span>Steps</span>
+            </div>
+            <div class="post_content">
+                <!-- Step 1 -->
+                <hr/>
+                <div class="row">
+                    <div class="col-6">
+                        <h3 style="font-family: sans-serif;">{{post.manual01}}</h3>
+                    </div>
+                    <div class="col-6 float-end">
+                        <img src="{{post.manual_img01}}" alt="." style="width: 100%; height: 300px; cursor: pointer;">
+                    </div>
+                </div>
+                <br/>
+                <hr/>
+                <br/>
+                <!-- Step 2 -->
+                <div class="row">
+                    <div class="col-6">
+                        <h3 style="font-family: sans-serif;">{{post.manual02}}</h3>
+                    </div>
+                    <div class="col-6 float-end">
+                        <img src="{{post.manual_img02}}" alt="." style="width: 100%; height: 300px; cursor: pointer;">
+                    </div>
+                </div>
+                <br/>
+                <hr/>
+                <br/>
+                <!-- Step 3 -->
+                <div class="row">
+                    <div class="col-6">
+                        <h3 style="font-family: sans-serif;">{{post.manual03}}</h3>
+                    </div>
+                    <div class="col-6 float-end">
+                        <img src="{{post.manual_img03}}" alt="." style="width: 100%; height: 300px; cursor: pointer;">
+                    </div>
+                </div>
+                <br/>
+                <hr/>
+                <br/>
+                <!-- Step 4 -->
+                <div class="row">
+                    <div class="col-6">
+                        <h3 style="font-family: sans-serif;">{{post.manual04}}</h3>
+                    </div>
+                    <div class="col-6 float-end">
+                        <img src="{{post.manual_img04}}" alt="." style="width: 100%; height: 300px; cursor: pointer;">
+                    </div>
+                </div>
+                <br/>
+                <hr/>
+                <br/>
+                <!-- Step 5 -->
+                <div class="row">
+                    <div class="col-6">
+                        <h3 style="font-family: sans-serif;">{{post.manual05}}</h3>
+                    </div>
+                    <div class="col-6 float-end">
+                        <img src="{{post.manual_img05}}" alt="." style="width: 100%; height: 300px; cursor: pointer;">
+                    </div>
+                </div>
+                <br/>
+                <hr/>
+                <br/>
+                <!-- Step 6 -->
+                {% if post.manual06 and post.manual_img06 %}
+                <div class="row">
+                    <div class="col-6">
+                        <h3 style="font-family: sans-serif;">{{post.manual06}}</h3>
+                    </div>
+                    <div class="col-6 float-end">
+                        <img src="{{post.manual_img06}}" alt="." style="width: 100%; height: 300px; cursor: pointer;">
+                    </div>
+                </div>
+                <br/>
+                <hr/>
+                <br/>
+                {% else %}
+                <br/>
+                {% endif %}
+                <br>
+                <br>
+            </div>
+        </div>
+    </div>
+</article>
+<!-- Comments section-->
+<div id="comment-area">
+    <!-- Comments Form -->
+    <div class="card my-4">
+        <h5 class="card-header">댓글을 남겨주세요.</h5>
+        <div class="card-body">
+            {% if user.is_authenticated %}
+            <form id="comment-form" method="POST" action="{{ post.get_absolute_url }}new_comment/">
+                {% csrf_token %}
+                <div class="form-group">
+                    {{ comment_form | crispy }}
+                </div>
+                <button type="submit" class="btn btn-primary" style="margin-top:10px;">댓글 등록</button>
+            </form>
+            {% else %}
+            <div class="card my-4">
+                <a role="button" class="btn btn-outline-dark btn-block" href="#" data-toggle="modal" data-target="#loginModal">댓글을 남기시려면 로그인을 해야 합니다.</a>
+            </div>
+            {% endif %}
+        </div>
+    </div><hr>
+
+    {% if post.comments.exists %}
+    {% for comment in post.comments.iterator %}
+    <!-- Single Comment -->
+    <div class="media mb-4" id="comment-{{ comment.pk }}">
+        <div class="media-body">
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+                <div style="display: flex; align-items: center;">
+                    <img class="d-flex mr-3 rounded-circle" src="{{ comment.get_avatar_url }}" alt="{{ comment.author }}" width="42px" style="margin-bottom:10px; margin-right:15px;">
+                    <h4 class="d-inline mt-0 mr-3">{{ comment.author.username }}</h4>
+                    <small class="text-muted mr-3" style="font-size:0.6em">{{ comment.created_at }}</small>
+                </div>
+
+                <div class="float-end">
+                    <a href="javascript:void(0)" data-uri="{% url 'blog:vote_comment' comment.id %}"
+                       class="recommend btn btn-sm btn-outline-secondary"> 추천
+                        <span class="badge rounded-pill bg-success">{{ comment.voter.count }}</span>
+                    </a>
+                    {% if user.is_authenticated and comment.author == user %}
+                    <a role="button"
+                       class="btn btn-sm btn-info"
+                       id="comment-{{ comment.pk }}-update-btn"
+                       href="/blog/update_comment/{{ comment.pk }}/">
+                        수정
+                    </a>
+                    <a role="button"
+                       href="#"
+                       id="comment-{{ comment.pk }}-delete-modal-btn"
+                       class="btn btn-sm btn-danger"
+                       data-toggle="modal" data-target="#deleteCommentModal-{{ comment.pk }}">
+                        삭제
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+            <p>{{ comment.content | linebreaks }}</p>
+            {% if comment.created_at != comment.modified_at %}
+            <p class="text-muted mb-0"><small>Updated: {{ comment.modified_at }}</small></p>
+            {% endif %}
+
+
+            <!-- Modal -->
+            <div class="modal fade" id="deleteCommentModal-{{ comment.pk }}" tabindex="-1" role="dialog" aria-labelledby="deleteCommentModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-sm" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deleteModalLabel">Are You Sure?</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <del>{{ comment | linebreaks }}</del>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                            <a role="button" class="btn btn-danger" href="/blog/delete_comment/{{ comment.pk }}/">Delete</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div><hr>
+    {% endfor %}
+    {% endif %}
+</div>
+
+
+
+{% endblock %}

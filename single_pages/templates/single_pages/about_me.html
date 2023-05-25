@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+
+    <title>천개의 레시피 - 소개</title>
+
+    <link rel="stylesheet" href="{% static 'blog/bootstrap/bootstrap.min.css' %}" media="screen">
+    <link rel="stylesheet" href="{% static 'single_pages/css/about_me.css' %}" media="screen">
+    <script src="https://kit.fontawesome.com/320e17fa54.js" crossorigin="anonymous"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"
+            integrity="sha384-zYPOMqeu1DAVkHiLqWBUTcbYfZ8osu1Nd6Z89ify25QV9guujx43ITvfi12/QExE"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.min.js"
+            integrity="sha384-Y4oOpwW3duJdCWv5ly8SCFYWqFDsfob/3GkgExXKV4idmbt98QcxXYs9UoXAB7BZ"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+</head>
+
+<body>
+
+{% include 'blog/navbar.html' %}
+
+<section>
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-lg-5" style="padding: 15px;">
+                <h1>천개의 레시피</h1><br>
+                <h5>냉장고에 처치곤란한 재료들이 한가득 남아있지는 않으신가요??</h5>
+                <h5>천개의 레시피가 도와드릴게요!</h5>
+                <br>
+                <h5>남은 재료들을 하나씩 입력하면 그에 맞는 음식 레시피를 추천해드립니다!</h5>
+                <br>
+                <h5>도저히 뭘 먹어야 좋을지 정하지 못하셨나요? 랜덤 메뉴 추천기능을 통해 메뉴 선정을 도와드립니다!!</h5>
+            </div>
+            <div class="col-lg-7">
+                <img class="img-fluid" style="margin-bottom: 25px;" src="{% static 'single_pages/images/냉장고2.jpg' %}">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!--<section class="bg-light margin-for-footer">-->
+<!--    <div class="container">-->
+<!--        <div class="row">-->
+<!--            <div class="col-12">-->
+<!--                <h1 style="margin: 15px;">제작자 소개</h1>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--        <div class="row">-->
+
+<!--            <div class="col-lg-3">-->
+<!--                <div class="card" data-toggle="modal" data-target="#dog02">-->
+<!--                    <img class="card-imp-top" src="{% static 'single_pages/images/dog02.jpg' %}">-->
+<!--                    <div class="card-body">-->
+<!--                        <h5 class="card-title">강철리</h5>-->
+<!--                        <p>소개~ </p>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+
+<!--            <div class="col-lg-3">-->
+<!--                <div class="card" data-toggle="modal" data-target="#dog01">-->
+<!--                    <img class="card-imp-top" src="{% static 'single_pages/images/dog01.jpg' %}">-->
+<!--                    <div class="card-body">-->
+<!--                        <h5 class="card-title">곽석훈</h5>-->
+<!--                        <p>소개~ </p>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+
+<!--            <div class="col-lg-3">-->
+<!--                <div class="card" data-toggle="modal" data-target="#dog04">-->
+<!--                    <img class="card-img-top" src="{% static 'single_pages/images/dog04.jpg' %}">-->
+<!--                    <div class="card-body">-->
+<!--                        <h5 class="card-title">양동규</h5>-->
+<!--                        <p>소개~ </p>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+
+<!--            <div class="col-lg-3">-->
+<!--                <div class="card" data-toggle="modal" data-target="#dog03">-->
+<!--                    <img class="card-img-top" src="{% static 'single_pages/images/dog03.jpg' %}">-->
+<!--                    <div class="card-body">-->
+<!--                        <h5 class="card-title">김채옥</h5>-->
+<!--                        <p>소개~ </p>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+
+<!--        </div>-->
+<!--    </div>-->
+<!--</section>-->
+
+<!--&lt;!&ndash; Modal &ndash;&gt;-->
+<!--<div class="modal fade" id="dog02" tabindex="-1" role="dialog" aria-labelledby="dog02ModalLabel" aria-hidden="true">-->
+<!--    <div class="modal-dialog modal-lg" role="document">-->
+<!--        <div class="modal-content">-->
+<!--            <div class="modal-header">-->
+<!--                <h5 class="modal-title" id="dog02">파이썬으로 통계업무 자동화하기</h5>-->
+<!--                <button type="button" class="close" data-dismiss="modal" aria-label="Close">-->
+<!--                    <span aria-hidden="true">&times;</span>-->
+<!--                </button>-->
+<!--            </div>-->
+<!--            <div class="modal-body">-->
+<!--                <div class="row">-->
+<!--                    <div class="col-lg-7">-->
+<!--                        <img class="img-fluid" src="{% static 'single_pages/images/dog02.jpg' %}">-->
+<!--                    </div>-->
+<!--                    <div class="col-lg-5">-->
+<!--                        <p>왈 왈 왈 왈! 와와왈 와뢍!</p>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="modal-footer">-->
+<!--                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+
+<!--<div class="modal fade" id="dog03" tabindex="-1" role="dialog" aria-labelledby="dog03ModalLabel" aria-hidden="true">-->
+<!--    <div class="modal-dialog modal-lg" role="document">-->
+<!--        <div class="modal-content">-->
+<!--            <div class="modal-header">-->
+<!--                <h5 class="modal-title" id="dog03">파이썬 사용자를 위한 웹개발 입문 A to Z Django + Bootstrap</h5>-->
+<!--                <button type="button" class="close" data-dismiss="modal" aria-label="Close">-->
+<!--                    <span aria-hidden="true">&times;</span>-->
+<!--                </button>-->
+<!--            </div>-->
+<!--            <div class="modal-body">-->
+<!--                <div class="row">-->
+<!--                    <div class="col-lg-7">-->
+<!--                        <img class="img-fluid" src="{% static 'single_pages/images/dog03.jpg' %}">-->
+<!--                    </div>-->
+<!--                    <div class="col-lg-5">-->
+<!--                        <p>멍머멍멍! 머머머ㅓ머멍!</p>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="modal-footer">-->
+<!--                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+
+<!--<div class="modal fade" id="dog04" tabindex="-1" role="dialog" aria-labelledby="dog04ModalLabel" aria-hidden="true">-->
+<!--    <div class="modal-dialog modal-lg" role="document">-->
+<!--        <div class="modal-content">-->
+<!--            <div class="modal-header">-->
+<!--                <h5 class="modal-title" id="dog04">dog</h5>-->
+<!--                <button type="button" class="close" data-dismiss="modal" aria-label="Close">-->
+<!--                    <span aria-hidden="true">&times;</span>-->
+<!--                </button>-->
+<!--            </div>-->
+<!--            <div class="modal-body">-->
+<!--                <div class="row">-->
+<!--                    <div class="col-lg-7">-->
+<!--                        <img class="img-fluid" src="{% static 'single_pages/images/dog04.jpg' %}">-->
+<!--                    </div>-->
+<!--                    <div class="col-lg-5">-->
+<!--                        <p>바우와우와우와!.</p>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="modal-footer">-->
+<!--                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+
+</body>
+
+<div class="fixed-bottom">
+    {% include 'blog/footer.html' %}
+</div>
+
+</html>

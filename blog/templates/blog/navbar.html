@@ -1,0 +1,287 @@
+{% load socialaccount %}
+{% load static %}
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=East+Sea+Dokdo&display=swap" rel="stylesheet">
+
+<style>
+    .na {
+        --bs-nav-link-padding-x: 0;
+        --bs-nav-link-padding-y: 0.5rem;
+        --bs-nav-link-font-weight: ;
+        --bs-nav-link-hover-color: skyblue;
+        --bs-nav-link-disabled-color: var(--bs-navbar-disabled-color);
+        display: flex;
+        flex-direction: row;
+        padding-left: 0;
+        margin-bottom: 0;
+        list-style: none;
+        color: gray;
+    }
+</style>
+
+<!--<nav class="navbar navbar-expand-lg" style="background: url('/static/blog/images/wood-g202ed4ab5_1920.jpg'); height: 100px;">-->
+<nav class="navbar navbar-expand-lg" style="background: beige;">
+    <div class="container container-fluid">
+        <a class="navbar-brand fw-bolder fs-3" href="/">천개의 레시피</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="input-group" style="width:25%">
+            <form class="input-group" action="{% url 'blog:home' %}" method="GET">
+                <input class="form-control" type="search" placeholder="메뉴검색" id="search-input" name="search_menu">
+                <button class="btn btn-primary" id="button-search" type="submit" onclick="searchPost();"><i class="fas fa-search"></i></button>
+            </form>
+        </div>
+        <div>
+            <button class="btn btn-secondary mx-1" data-bs-toggle="modal" data-bs-target="#openSearch">재료검색</button>
+        </div>
+
+        <div class="collapse navbar-collapse mx-3" id="navbarSupportedContent">
+            <ul class="na me-auto mb-2 mb-lg-0">
+                <li class="nav-item mx-2">
+                    <a class="nav-link fw-bolder fs-4" aria-current="page" href="/">홈</a>
+                </li>
+                <li class="nav-item mx-2">
+                    <a class="nav-link fw-bolder fs-4" href="/blog">레시피</a>
+                </li>
+                <li class="nav-item mx-2">
+                    <a class="nav-link fw-bolder fs-4" href="/about_me">소개</a>
+                </li>
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle fw-bolder fs-4" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        카테고리
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                    {% for category in categories %}
+                        <a class="dropdown-item fw-bolder" href="{{ category.get_absolute_url }}">{{ category }}</a>
+                    {% endfor %}
+                    </div>
+                </li>
+            </ul>
+
+            <ul class="navbar-nav ml-auto mx-3">
+                {% if user.is_authenticated %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle fw-bolder" style="font-size: 1.25em" href="#" id="id=navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {% if user %}
+                            {% if user.socialaccount_set.all.0.get_avatar_url %}
+                            <img class="rounded-circle" width="40px" src="{{ user.socialaccount_set.all.0.get_avatar_url }}" alt="">
+                            {% else %}
+                            <img class="rounded-circle" width="40px" src="https://doitdjango.com/avatar/id/1527/2fb7409a9fd4710a/svg/{{ user.email }}">
+                            {% endif %}
+                            &nbsp;
+                            {{ user.username }}
+                        {% endif %}
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item" href="/accounts/logout/">로그아웃</a>
+                    </div>
+                </li>
+                {% else %}
+                <li class="navbar-nav ml-auto">
+                    <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">로그인</a>
+                </li>
+                {% endif %}
+            </ul>
+
+        </div>
+    </div>
+</nav>
+
+<!-- Modal -->
+<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="display: flex; justify-content: center">
+        <div class="modal-content" style="width: 400px;">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="loginModalLabel">Login</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="d-flex flex-column align-items-center">
+                    <div class="mb-3">
+                        <a role="button" class='btn' href="{% provider_login_url 'google' %}">
+                            <img src="{% static 'blog/images/btn_google_signin_light_pressed_web.png' %}" style="width:200px; height:50px;" alt="Log in with Google">
+                        </a>
+                    </div>
+                    <div class="mb-3">
+                        <a role="button" class='btn' href="{% provider_login_url 'naver' %}">
+                            <img src="{% static 'blog/images/btnG_완성형.png' %}" style="width:200px; height:50px;" alt="Log in with naver">
+                        </a>
+                    </div>
+                    <div class="mb-3">
+                        <a role="button" href="{% provider_login_url 'kakao' %}">
+                            <img src="{% static 'blog/images/kakao_login_medium_narrow.png' %}" style="width:200px; height:50px;" alt="Log in with kakao">
+                        </a>
+                    </div>
+                    <div class="mb-3">
+                        <a role="button" class="btn btn-primary mx-1 my-1" href="/accounts/login/" style="width:200px; height:50px; line-height: 33px; border:1px solid lightblue">
+                            <i class="far fa-envelope"></i>&nbsp; Log in with E-mail
+                        </a>
+                    </div>
+                    <div class="mb-3">
+                        <a role="button" class="btn btn-primary mx-1 my-1" href="/accounts/signup/" style="width:200px; height:50px; line-height: 33px; border:1px solid lightblue">
+                            <i class="far fa-envelope"></i>&nbsp; Sign up with E-mail
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="openSearch" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="searchModalLabel">재료검색</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="input-group" style="width:100%">
+                    <input class="form-control" type="text" placeholder="재료를 1개씩 입력해주세요" id="firstInput">
+                    <button class="btn btn-secondary" onclick="addTextToSearch();"><i class="fa-solid fa-plus"></i></button>
+                </div>
+                <!-- 추가: 검색어 목록을 표시할 div 추가 -->
+                <div id="search-keywords-container"
+                    style="margin-top:12px; display: flex; flex-wrap: wrap; gap: 4px; padding: 10px; overflow-y: auto; border: 1px solid lightgray; height: 200px; margin-bottom: 5px; border-radius: 5px;">
+                </div>
+
+                <div class="input-group mt-lg-3" style="width:100%">
+                    <form class="input-group" action="{% url 'blog:home' %}" method="GET">
+                        <input class="form-control" type="search" placeholder="" id="search-input-modal" name="search_ingredient" readonly>
+                        <button class="btn btn-secondary" id="button-clear" type="button" onclick="clearKeywords();"><i class="fas fa-times"></i></button>
+                        <button class="btn btn-primary" id="button-search" type="submit" onclick="searchPostModal();"><i class="fas fa-search"></i></button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script>
+function addTextToSearch() {
+    const firstInput = document.getElementById('firstInput');
+    const searchInput = document.getElementById('search-input-modal');
+    const keyword = firstInput.value.trim();
+
+    if (keyword) {
+      createKeywordBox(keyword);
+      if (searchInput.value) {
+          searchInput.value += ', ' + keyword;
+      } else {
+          searchInput.value = keyword;
+      }
+    }
+
+    // 초기화: 추가한 뒤, 첫 번째 검색창의 값을 초기화합니다.
+    firstInput.value = '';
+}
+
+function searchPost() {
+    let searchValue = document.getElementById('search-input').value.trim();
+    if (searchValue.length > 0) {
+        location.href = "/blog/search1/" + searchValue + "/";
+    } else {
+        alert('검색어(' + searchValue + ')가 너무 짧습니다.');
+    }
+}
+
+function clearSearchInput() {
+    document.getElementById("search-input-modal").value = "";
+}
+
+function searchPostModal() {
+    let searchValue = document.getElementById('search-input-modal').value.trim();
+    if (searchValue.length > 0) {
+        location.href = "/blog/search/" + searchValue + "/";
+    } else {
+        alert('검색어(' + searchValue + ')가 너무 짧습니다.');
+    }
+}
+
+document.getElementById('search-input-modal').addEventListener('keyup', function (event) {
+    if (event.key == 'Enter') {
+        searchPost();
+    }
+});
+
+document.getElementById('firstInput').addEventListener('keyup', function (event) {
+    if (event.key == 'Enter') {
+        addTextToSearch();
+    }
+});
+
+// 추가: 검색어 목록 박스 생성 기능
+function createKeywordBox(keyword) {
+  const keywordContainer = document.getElementById('search-keywords-container');
+  const keywordBox = document.createElement('div');
+  keywordBox.className = 'keyword-box';
+  keywordBox.style = 'display: flex; align-items: center; background: #f0f0f0; padding: 10px 4px; height: 30px; border-radius: 4px; small font; margin: 2px;'; // 패딩 값을 조절합니다.
+
+  const keywordText = document.createElement('span');
+  keywordText.textContent = keyword;
+
+  const closeButton = document.createElement('button');
+  closeButton.style = 'background: none; border: none; padding-left: 4px; font-size: 14px;'; // 패딩 값을 조절합니다.
+  closeButton.innerHTML = '<i class="fas fa-times"></i>';
+  closeButton.onclick = function() {
+      removeKeyword(keyword, keywordBox);
+  };
+
+  keywordBox.appendChild(keywordText);
+  keywordBox.appendChild(closeButton);
+  keywordContainer.appendChild(keywordBox);
+}
+
+// 추가: 키워드 삭제 기능
+
+
+
+
+function removeKeywordFromInput(keyword) {
+  const searchInput = document.getElementById('search-input-modal');
+  const keywords = searchInput.value.split(',').map(k => k.trim());
+
+  const index = keywords.indexOf(keyword);
+  if (index !== -1) {
+    keywords.splice(index, 1);
+  }
+
+  searchInput.value = keywords.join(', ');
+}
+
+function removeKeyword(keyword, keywordBox, isFromThirdInput = false) { // isFromThirdInput을 인자로 추가
+  const keywordContainer = document.getElementById('search-keywords-container');
+  keywordContainer.removeChild(keywordBox);
+  const searchInput = document.getElementById('search-input-modal');
+  const keywordValues = searchInput.value.split(',').map(k => k.trim());
+
+  if (isFromThirdInput) { // 세 번째 검색창에서 삭제되었을 때만 실행
+    removeKeywordFromInput(keyword);
+  }
+
+  const index = keywordValues.indexOf(keyword);
+        if (index > -1) {
+            keywordValues.splice(index, 1);
+        }
+
+        searchInput.value = keywordValues.join(', ');
+        keywordBox.remove();
+}
+
+function clearKeywords() { // 새로운 함수를 추가
+  const keywordContainer = document.getElementById('search-keywords-container');
+  while (keywordContainer.firstChild) {
+    keywordContainer.removeChild(keywordContainer.firstChild);
+  }
+  document.getElementById('search-input-modal').value = '';
+}
+</script>

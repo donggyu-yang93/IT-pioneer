@@ -1,0 +1,54 @@
+<section class="mb-5">
+    <div class="card bg-light">
+        <div class="card-body">
+            {% if user.is_authenticated %}
+            <div id="comment-form" method="POST" action="{{ post.get_absolute_url }}new_comment/">
+                <!-- Comment form-->
+                {% csrf_token %}
+                <div class="mb-4">
+                    {{ comment_form | crispy }}
+                    <button type="submit" class="btn btn-primary float-end" style="margin-top:10px;">Submit</button>
+                </div><br><hr>
+                {% if post.comment_set.exists %}
+                    {% for comment in post.comment_set.iterator %}
+                    <!-- Comment with nested comments-->
+                    <div class="d-flex mb-4" id="comment-{{ comment.pk }}">
+                        <div class="flex-shrink-0">
+                            <img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..."/>
+                        </div>
+                        <div class="ms-3">
+                            <div class="fw-bold">{{ comment.author.username }} &nbsp;
+                                <small class="text-muted">{{ comment.created_at }}</small>
+                            </div>
+                            <p>{{ comment.content | linebreaks }}</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            {% else %}
+
+            <div class="card my-4">
+                <a role="button" class="btn btn-outline-dark btn-block" href="#" data-toggle="modal" data-target="#loginModal">Log in and leave a comment</a>
+            </div><hr>
+            {% if post.comment_set.exists %}
+                {% for comment in post.comment_set.iterator %}
+                <!-- Comment with nested comments-->
+                <div class="d-flex mb-4" id="comment-{{ comment.pk }}">
+                    <div class="flex-shrink-0">
+                        <img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..."/>
+                    </div>
+                    <div class="ms-3">
+                        <div class="fw-bold">{{ comment.author.username }} &nbsp;
+                            <small class="text-muted">{{ comment.created_at }}</small>
+                        </div>
+                        <p>{{ comment.content | linebreaks }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            {% endif %}
+
+            {% endif %}
+        </div>
+    </div>
+</section>

@@ -1,0 +1,50 @@
+<div class="col-md-4 col-lg-3 mt-4">
+    <div class="card my-4">
+        <div class="card-header">카테고리</div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-12">
+                    <ul class="mb-0">
+                        {% for category in categories %}
+                        <li><a class='text-decoration-none' href="{{ category.get_absolute_url }}">{{ category }} ({{ category.post_set.count }})</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card my-4">
+        <div class="card-header">날씨</div>
+        <div class="card-body">
+            <div>
+                {% for weather in weather_data %}
+                <h5>
+                    {{ weather.city }} : {{ weather.temperature }}℃
+                    <img src="http://openweathermap.org/img/wn/{{ weather.icon }}.png" alt="">
+                </h5>
+                {{ weather.description }}
+                {% endfor %}
+                <form method='POST' action="{% url 'blog:weather' %}">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit"> 날씨페이지로 이동 </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="card my-4">
+        <div class="card-header">오늘 머먹지??</div>
+        <div class="card-body">
+            <div>
+                <form action="{% url 'blog:random_post' %}" method="POST">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-info btn-sm">오늘의 메뉴</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
