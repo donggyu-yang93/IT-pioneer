@@ -311,7 +311,7 @@ from .forms import CityForm
 
 
 def weather(request):
-    api_key = "1040b438745cc123940f7320c30a4e1d"
+    api_key = ###
     url = f'http://api.openweathermap.org/data/2.5/weather?q={{}}&appid={api_key}'
     cities = City.objects.all()
 
