@@ -40,8 +40,8 @@ class Post(models.Model):
     tags = models.ManyToManyField(Tag, blank=True)
 
     rcp_name = models.CharField(max_length=30, null=True, default='None')
-    large_img = models.TextField(max_length=100, blank=True, null=True)
-    small_img = models.TextField(max_length=100, blank=True, null=True)
+    large_img = models.ImageField(upload_to='large_images/', null=True, blank=True)
+    small_img = models.ImageField(upload_to='small_images/', null=True, blank=True)
     ingredient = models.TextField(max_length=200, blank=True, null=True)
     manual01 = models.TextField(max_length=200, blank=True, null=True)
     manual02 = models.TextField(max_length=200, blank=True, null=True)

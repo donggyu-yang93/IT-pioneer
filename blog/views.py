@@ -4,7 +4,7 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import get_object_or_404
 from .models import Post, Category, Tag, Comment
-from .forms import CommentForm
+from .forms import CommentForm, PostCreateForm
 from django.core.exceptions import PermissionDenied
 from django.utils.text import slugify
 from django.db.models import Q
@@ -102,7 +102,8 @@ class PostSearch(PostList):
 
 class PostCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = Post
-    fields = ['rcp_name','large_img','small_img','ingredient','manual01', 'manual02', 'manual03', 'manual04', 'manual05', 'manual06', 'category']
+    form_class = PostCreateForm
+
 
     def test_func(self):
         return self.request.user.is_superuser or self.request.user.is_staff
@@ -311,7 +312,7 @@ from .forms import CityForm
 
 
 def weather(request):
-    api_key = ###
+    api_key = '1040b438745cc123940f7320c30a4e1d'
     url = f'http://api.openweathermap.org/data/2.5/weather?q={{}}&appid={api_key}'
     cities = City.objects.all()
 

@@ -87,10 +87,10 @@ WSGI_APPLICATION = 'django_pj.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'recipe',
+        'NAME': 'recipe1',
         'USER': 'root',
         'PASSWORD': '1234',
-        'HOST': '127.0.0.1',
+        'HOST': 'localhost',
         'PORT': '3306',
     }
 }
