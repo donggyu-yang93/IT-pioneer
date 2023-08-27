@@ -34,11 +34,17 @@ $(document).ready(function () {
       },
       dataType: "json",
       success: function (data) {
-        if (data.liked) {
-          $(`#like-btn-${post_pk}`).html('<i class="fas fa-star" style="color: #fae500;"></i>');
+        if (data.error) {
+          alert(data.error);
         } else {
-          $(`#like-btn-${post_pk}`).html('<i class="far fa-star" style="color: black;"></i>');
+          alert(data.message);
+
+          if (data.liked) {
+            $(`#like-btn-${post_pk}`).html('<i class="fas fa-star" style="color: #fae500;"></i>');
+          } else {
+            $(`#like-btn-${post_pk}`).html('<i class="far fa-star" style="color: black;"></i>');
         }
+       }
       },
     });  }
 

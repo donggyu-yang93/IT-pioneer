@@ -371,14 +371,17 @@ def likes(request, post_pk):
     if request.user.is_authenticated:
         post = get_object_or_404(Post, pk=post_pk)
         liked = False
+        message = ""
 
         if post.like_users.filter(pk=request.user.pk).exists():
             post.like_users.remove(request.user)
+            message = '즐겨찾기가 취소되었습니다.'
         else:
             post.like_users.add(request.user)
             liked = True
-        return JsonResponse({'liked':liked, 'post_pk':post_pk})
-    return JsonResponse({'error':'User not authenticated'})
+            message = '즐겨찾기 되었습니다.'
+        return JsonResponse({'liked':liked, 'post_pk':post_pk, 'message':message})
+    return JsonResponse({'error':'즐겨찾기를 하시려면 로그인 하셔야 합니다.'})
 
 # 추천
 
@@ -402,7 +405,7 @@ def vote_recipe(request, post_pk):
         if request.user in post.voter.all():
             post.voter.remove(request.user)
             votes = post.voter.count()
-            return JsonResponse({'status': 'unvoted', 'votes': votes})
+            return JsonResponse({'status': 'unvoted', 'votes': votes, 'message': '추천을 취소하였습니다.'})
         else:
             post.voter.add(request.user)
             votes = post.voter.count()
