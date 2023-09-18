@@ -88,9 +88,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'recipe',
-        'USER': 'root',
-        'PASSWORD': 'passwordfuck097u',
-        'HOST': '15.165.158.78',
+        'USER': os.environ.get('MYSQL_USER_NAME', 'default_user'),
+        'PASSWORD': os.environ.get('MYSQL_PASSWORD', 'default_password'),
+        'HOST': os.environ.get('MYSQL_HOST', 'localhost'),
         'PORT': '3306',
     }
 }
