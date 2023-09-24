@@ -231,6 +231,7 @@ class Sortings(PostList):
                 post_list = Post.objects.filter(like_users=self.request.user).order_by('-id')
             else:
                 post_list = Post.objects.none()
+                # 정렬기능변경
         else:
             post_list = Post.objects.all().order_by('-id')
         return post_list
