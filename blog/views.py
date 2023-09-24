@@ -227,7 +227,10 @@ class Sortings(PostList):
         elif sort == 'comments':
             post_list = Post.objects.annotate(comment_count=Count('comments')).order_by('-comment_count', '-id')
         elif sort == 'Bookmark':
-            post_list = Post.objects.filter(like_users=self.request.user).order_by('-id')
+            if self.request.user.is_authenticated:
+                post_list = Post.objects.filter(like_users=self.request.user).order_by('-id')
+            else:
+                post_list = Post.objects.none()
         else:
             post_list = Post.objects.all().order_by('-id')
         return post_list
