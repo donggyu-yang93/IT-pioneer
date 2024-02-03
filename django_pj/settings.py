@@ -90,10 +90,20 @@ DATABASES = {
         'NAME': 'recipe',
         'USER': 'root',
         'PASSWORD': 'passwordfuck097u',
-        'HOST': '15.165.158.78',
+        'HOST': '3.34.99.59',
         'PORT': '3306',
     }
 }
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'recipe1',
+#         'USER': 'root',
+#         'PASSWORD': '1234',
+#         'HOST': 'localhost',
+#         'PORT': '3306',
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators

@@ -15,28 +15,6 @@
     </div>
 
     <div class="card my-4">
-        <div class="card-header">날씨</div>
-        <div class="card-body">
-            <div>
-                {% for weather in weather_data %}
-                <h5>
-                    {{ weather.city }} : {{ weather.temperature }}℃
-                    <img src="http://openweathermap.org/img/wn/{{ weather.icon }}.png" alt="">
-                </h5>
-                {{ weather.description }}
-                {% endfor %}
-                <form method='POST' action="{% url 'blog:weather' %}">
-                    {% csrf_token %}
-                    {{ form.as_p }}
-                    <button type="submit"> 날씨페이지로 이동 </button>
-                </form>
-            </div>
-        </div>
-    </div>
-
-
-
-    <div class="card my-4">
         <div class="card-header">오늘의 추천메뉴</div>
         <div class="card-body">
             <div>
