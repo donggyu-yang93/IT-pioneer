@@ -90,7 +90,7 @@ DATABASES = {
         'NAME': 'recipe',
         'USER': 'root',
         'PASSWORD': 'passwordfuck097u',
-        'HOST': '3.34.99.59',
+        'HOST': '3.37.89.187',
         'PORT': '3306',
     }
 }
